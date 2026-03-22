@@ -351,22 +351,26 @@ async function submitForm() {
   fb.style.display = 'block'; fb.className = 'warning';
   fb.textContent = 'Please wait, submitting your enquiry...';
 
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwp35CF5lf8uS_T6O3nnvYnCybDrZ3SqegUQQQRXaUqCU3pw8sRt1sQ9RFIRSImCA/exec';
+
   try {
-    await fetch('https://defaultd260b32a33fe4cbdaa574615d3334c.9d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/fe62c00137b2465aad454fc207b522cc/triggers/manual/paths/invoke?api-version=1', {
+    const formData = new FormData();
+    formData.append('name', fname);
+    formData.append('phone', phone);
+    formData.append('email', email);
+    formData.append('city', city);
+    formData.append('qualification', qualification);
+    formData.append('courses', courses);
+    formData.append('country', countryFinal);
+    formData.append('message', msg);
+    formData.append('submittedAt', submittedAt);
+
+    await fetch(SCRIPT_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: fname,
-        phone: phone,
-        email: email,
-        city: city,
-        qualification: qualification,
-        courses: courses,
-        country: countryFinal,
-        message: msg,
-        submittedAt: submittedAt
-      })
+      mode: 'no-cors',
+      body: formData
     });
+
     savePhone(phone);
     fb.className = 'success';
     fb.textContent = 'Thank you, ' + fname + '! Your enquiry for ' + courses + ' has been received. Our counsellor will contact you shortly.';
